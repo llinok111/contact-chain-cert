@@ -1,0 +1,10 @@
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.venv/
+state/
+.model-patch.yml
+*.zip
+*.tar.gz
+*.tgz

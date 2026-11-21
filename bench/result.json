@@ -1,0 +1,50 @@
+{
+  "measuredAt": "2026-11-21T10:25:18.785Z",
+  "corpus": {
+    "scenarios": 6,
+    "interfacesPerRound": 138,
+    "manifoldsAllRounds": 828
+  },
+  "coldStartMs": 479.26,
+  "samples": [
+    467.804,
+    465.951,
+    461.702,
+    462.407,
+    460.766,
+    460.808,
+    464.431
+  ],
+  "stats": {
+    "n": 7,
+    "min": 460.766,
+    "median": 462.407,
+    "p95": 467.804,
+    "max": 467.804,
+    "mean": 463.41,
+    "stddev": 2.521,
+    "relStddev": 0.0054,
+    "perManifoldUs": 3350.77
+  },
+  "checks": {
+    "containment": 1,
+    "interfaceCount": 138,
+    "areaSumFloat": 541.432853
+  },
+  "baseline": {
+    "method": "truncate4 (first four clipped vertices)",
+    "coldStartMs": 56.664,
+    "medianMs": 60.463,
+    "samples": [
+      55.682,
+      62.234,
+      63.222,
+      62.375,
+      60.463,
+      57.345,
+      57.478
+    ],
+    "containment": 0.4782608695652174
+  },
+  "note": "Wall clock on a shared 4-core box; coldStart is the first uncached run. Per-manifold time divides the median by the 138 interfaces of one round."
+}

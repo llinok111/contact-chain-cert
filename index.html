@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>contact-chain-cert — exact 4-point contact manifolds</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0b0e14; color: #d7dce5; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; }
+  #app { position: fixed; inset: 0; }
+  #panel { position: fixed; top: 14px; left: 14px; width: 330px; padding: 14px 16px; background: rgba(14,18,27,.9);
+           border: 1px solid #263042; border-radius: 10px; backdrop-filter: blur(6px); }
+  h1 { font-size: 14px; margin: 0 0 6px; letter-spacing: .04em; color: #fff; }
+  .sub { color: #8b97ab; margin-bottom: 10px; }
+  label { display: block; margin: 10px 0 4px; color: #9fb0c9; }
+  input[type=range] { width: 100%; }
+  #stats { margin-top: 12px; padding-top: 10px; border-top: 1px solid #263042; }
+  .k { color: #7f8da3; } .v { color: #8be9c0; } .warn { color: #ffb86b; }
+  #note { margin-top: 8px; color: #6b7789; font-size: 11px; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="panel">
+  <h1>contact-chain-cert</h1>
+  <div class="sub">exact rational 4-point contact manifolds</div>
+  <label>chain scenario <span id="scName">chain-0</span></label>
+  <input id="sc" type="range" min="0" max="5" step="1" value="0">
+  <label>warm-start round <span id="rName">0</span> (perturbation)</label>
+  <input id="round" type="range" min="0" max="5" step="1" value="0">
+  <div id="stats"></div>
+  <div id="note">drag to orbit · scroll to zoom · boxes = 24-body chain, cyan loops = exact contact polygons, dots = 4-point manifolds</div>
+</div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
