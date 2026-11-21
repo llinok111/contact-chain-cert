@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   pointInConvex, analyzeScenario, supportCom, buildChain, footprint,
-  clipConvex, toNumber, sub,
+  clipConvex, toNumber, sub, quadMargin,
 } from '../src/core.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +42,7 @@ export function fps4(poly, com) {
 }
 
 let total = 0, inside = 0;
+const margins = [];
 for (const sc of data.scenarios) {
   const res = analyzeScenario(sc);
   const { bodies, settled } = buildChain(sc);
@@ -52,10 +53,14 @@ for (const sc of data.scenarios) {
     const quad = sel.map((k) => poly[k]);
     total++;
     if (pointInConvex(quad, com)) inside++;
+    const m = quadMargin(quad, com);
+    margins.push(m === null ? -1 : m);
   }
 }
 const rate = inside / total;
-console.log(`fps4 containment ${inside}/${total} = ${(rate * 100).toFixed(2)}%`);
+margins.sort((a, b) => a - b);
+const med = margins[Math.floor(margins.length / 2)];
+console.log(`fps4 containment ${inside}/${total} = ${(rate * 100).toFixed(2)}% medianMargin=${med.toFixed(6)}`);
 if (process.argv.includes('--json')) {
-  console.log(JSON.stringify({ method: 'fps4', total, inside, rate }));
+  console.log(JSON.stringify({ method: 'fps4', total, inside, rate, medianMargin: +med.toFixed(6) }));
 }
