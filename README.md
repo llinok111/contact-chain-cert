@@ -8,7 +8,7 @@
 
 ```bash
 node tools/gen-sample.mjs     # 生成 data/scenarios.json + data/reference.json
-node bench/verify.mjs         # 23 条断言，全部打印实际值
+node bench/verify.mjs         # 24 条断言，全部打印实际值
 node bench/bench.mjs          # 7 次采样 + 冷启动，写 bench/result.json
 node baseline/truncate4.mjs   # 朴素基线：47.83% 包含率
 python3 -m http.server 4173    # 打开 http://localhost:4173
@@ -24,6 +24,7 @@ python3 -m http.server 4173    # 打开 http://localhost:4173
 | 最小稳定裕度（长度单位） | **0.698564**（中位 0.880207） | 基线在 72/138 个流形上质心落到四边形外，裕度为负 |
 | 特征 ID 跨 6 轮扰动稳定性 | **Jaccard 均值 0.999420**（690 对界面，最小 0.6） | 基线无持久 ID，无法 warm-start |
 | 6 轮扰动下包含率 | **690/690 = 100%** | — |
+| 子集最优性 | **36/36** 抽样接触的所选 4 子集与独立穷举的最大裕度子集逐位相等（gap=0） | 截断基线不做优化 |
 | 面积/质心精确性 | 46/46 轴对齐闭式面积逐位相等；138/138 质心与独立扇形三角化 oracle 逐位相等；Pick 定理在 D=48 与 D=240 的格点上 2/2 逐位相等 | float 管线无精确证书 |
 | 尺度不变性 | 1e-6 / 1e-3 / 1 / 1e3 / 1e6 五档共享同一 feature+subset 拓扑签名，面积精确按 k² 缩放 | — |
 | 全流程耗时（138 界面） | 冷启动 479.260 ms；7 样本中位 **462.407 ms**、p95 467.804、stddev 2.521、relStddev **0.54%**；**3350.77 µs/流形** | `truncate4` 中位 **60.463 ms（438.1 µs/流形）**，但 52.17% 流形不含质心 |

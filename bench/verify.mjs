@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import {
   fr, fstr, add, sub, mul, div, cmp, eq, sgn, gcd, toNumber, fparse, buildChain,
   footprint, clipConvex, supportCom, analyzeScenario, perturbScenario, scaleScenario,
-  signatureOf, polygonArea, polygonCentroid, pointInConvex, cross, featureJaccard,
+  signatureOf, polygonArea, polygonCentroid, pointInConvex, cross, len2, featureJaccard,
 } from '../src/core.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -240,6 +240,39 @@ for (const it of ifaces) areaSum = add(areaSum, it.area);
 check('A23 reference totals', ref.totals.manifolds === 828 && ref.totals.containment === 1 &&
   ref.totals.areaSum === fstr(areaSum) && ref.scenarios[0].signature === signatureOf(results[0]),
   `manifolds=${ref.totals.manifolds} containment=${ref.totals.containment} areaSum=${fstr(areaSum)}`);
+
+// ---- 14. independent optimality of the chosen 4-subset -------------------
+// Re-enumerate every 4-subset here without calling reduceManifold: the chosen
+// margin must equal the maximal containing-subset margin on 36 sampled contacts.
+function localMargin(q, p) {
+  let best = null;
+  for (let i = 0; i < q.length; i++) {
+    const a = q[i], b = q[(i + 1) % q.length];
+    const cr = cross(a, b, p);
+    if (sgn(cr) <= 0) return null;
+    const m = toNumber(cr) / Math.sqrt(toNumber(len2(a, b)));
+    if (best === null || m < best) best = m;
+  }
+  return best;
+}
+let optChecked = 0, optEqual = 0, optGap = 0;
+for (let s = 0; s < scenarios.length; s++) {
+  const { bodies: bs, settled: st } = buildChain(scenarios[s]);
+  for (let i = 0; i < 6; i++) {
+    const poly = clipConvex(footprint(st[i + 1], i + 1), footprint(st[i], i));
+    const com = supportCom(bs, i + 1);
+    let best = null;
+    for (let a = 0; a < poly.length; a++) for (let b = a + 1; b < poly.length; b++)
+      for (let c = b + 1; c < poly.length; c++) for (let d = c + 1; d < poly.length; d++) {
+        const m = localMargin([poly[a], poly[b], poly[c], poly[d]], com);
+        if (m !== null && (best === null || m > best)) best = m;
+      }
+    const chosen = results[s].interfaces[i].margin;
+    optChecked++; optGap = Math.max(optGap, Math.abs(best - chosen));
+    if (Math.abs(best - chosen) < 1e-12) optEqual++;
+  }
+}
+check('A24 subset optimality', optEqual === optChecked, `${optEqual}/${optChecked} sampled contacts reach the independently enumerated max margin (gap=${optGap.toExponential(2)})`);
 
 console.log(`\n${pass} passed / ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
